@@ -1,4 +1,5 @@
 import socket
+import threading
 
 s=socket.socket()
 
@@ -10,7 +11,13 @@ s.listen()
 print('Wait for connection...')
 c, addr=s.accept()
 print('client added!')
-while True:
-    msg=input("Your message >>>")
-    c.send(msg.encode())
-    print("client message >>>",c.recv(1024).decode())
+def send():
+    while True:
+        msg = input("\nYour message>>>")
+        c.send(msg.encode())
+def recv():
+    while True:
+        print("\nclient message>>>"+c.recv(1024).decode())
+
+send = threading.Thread(target=send).start()
+recv = threading.Thread(target=recv).start()
